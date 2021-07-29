@@ -1,9 +1,8 @@
 import torch
 import h5py
 import numpy as np
-import tqdm.notebook as tq
-from sklearn.utils.extmath import log_logistic
-import scipy.sparse as sp
+import tqdm.notebook as tq # Uncomment if using notebook
+from tqdm import tqdm # Uncomment if using terminal
 
 class RBM:
     # NEEDED VAR:
@@ -416,8 +415,9 @@ class RBM:
             f = h5py.File('AllParameters.h5','w')
             f.create_dataset('alltime',data=self.list_save_time)
             f.close()
-        ''' 
-        for t in tq.tqdm(range(epochs_max)):
+        '''
+        # for t in tq.tqdm(range(epochs_max)): # Uncomment if using notebook
+        for t in tqdm(range(epochs_max)): # Uncomment if using terminal
             #self.free_energies_.append(torch.mean(self.free_energy(X)).item())
 
 
