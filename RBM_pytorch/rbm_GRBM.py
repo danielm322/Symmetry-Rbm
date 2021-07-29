@@ -1,9 +1,9 @@
 import torch
 import h5py
 import numpy as np
-import tqdm.notebook as tq
-from sklearn.utils.extmath import log_logistic
-import scipy.sparse as sp
+# from tqdm import tqdm # Uncomment here if using terminal
+import tqdm.notebook as tq # Uncomment here if using notebook
+
 
 class GRBM:
     # NEEDED VAR:
@@ -337,7 +337,7 @@ class GRBM:
             self.W +=  W_by_blocks_rolled_pos.sum(axis=0)*lr_p/self.data_var - W_by_blocks_rolled_neg.sum(axis=0)*lr_n/self.data_var - 2*lr_reg*self.W
             
             if self.Update_var:
-                self.data_std += ((v_pos-self.vbias.repeat(self.Symmetry_cells).reshape(-1,1)).square().sum(axis=0) - 2 * (v_pos.t().mm(self.W.t()) * h_pos.t()).sum(dim=1)).mean()/self.data_std**3 * lr_p - ((v_neg-self.vbias.repeat(self.Symmetry_cells).reshape(-1,1)).square().sum(axis=0) - 2 * (v_neg.t().mm(self.W.t()) * h_neg.t()).sum(dim=1)).mean()/self.data_std**3 * lr_n
+                self.data_std += ((v_pos-self.vbias.repeat(self.Symmetry_cells).reshape(-1,1)).square().sum(axis=0)/self.data_std**3 - 2 * (torch.matmul(self._W_v_temp, v_pos) * h_pos).sum(dim=0)/self.data_var).sum() * lr_p - ((v_neg-self.vbias.repeat(self.Symmetry_cells).reshape(-1,1)).square().sum(axis=0)/self.data_std**3 - 2 * (torch.matmul(self._W_v_temp, v_neg) * h_neg).sum(dim=0)/self.data_var).sum() * lr_n
                 self.data_var = self.data_std**2 
             if self.UpdFieldsVis:
                 self.vbias += v_pos.reshape(self.Symmetry_cells, self.v_units_per_cell,v_pos.shape[1]).sum(axis=0).sum(axis=1)*lr_p - v_neg.reshape(self.Symmetry_cells, self.v_units_per_cell,v_neg.shape[1]).sum(axis=0).sum(axis=1)*lr_n
@@ -393,8 +393,8 @@ class GRBM:
             f.create_dataset('alltime',data=self.list_save_time)
             f.close()
         '''    
-
-        for t in tq.tqdm(range(epochs_max)):
+        #for t in tqdm(range(epochs_max)): # Uncomment here if using terminal
+        for t in tq.tqdm(range(epochs_max)): # Uncomment here if using notebook
             
             # Permute data            
             Xp = X[:,torch.randperm(X.size()[1])]
@@ -430,9 +430,9 @@ class GRBM:
                 self.list_of_W_matrices.append(self.W.clone())
                 self.list_of_hbias.append(self.hbias.clone())
                 self.list_of_vbias.append(self.vbias.clone())
-                # Slowly decrease variance
-                self.data_std -= 8*1e-4
-                self.data_var = self.data_std**2
+                # Uncomment here to slowly decrease variance of data each 10 epochs
+                #self.data_std -= 8*1e-4
+                #self.data_var = self.data_std**2
                 
             
             
