@@ -1,8 +1,7 @@
 # -*- coding: utf-8 -*-
 """Solar Wind GRBM.ipynb
 Code created by Daniel Montoya
-Original file is located at
-    https://colab.research.google.com/drive/1y67dYmihDd2p8QZg7fMVd2cdm3G66NH3
+https://github.com/danielm322/Symmetry-Rbm
 """
 
 
