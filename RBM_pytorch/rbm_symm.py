@@ -1,7 +1,8 @@
+# IMPORTANT: To see progress bars during training, comment or uncomment appropriately in lines 5,6, 420,421
 import torch
 import h5py
 import numpy as np
-import tqdm.notebook as tq # Uncomment if using notebook
+#import tqdm.notebook as tq # Uncomment if using notebook
 from tqdm import tqdm # Uncomment if using terminal
 
 class RBM:
