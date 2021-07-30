@@ -1,3 +1,4 @@
+# IMPORTANT: To see progress bars during training, comment or uncomment appropriately in lines 5,6, 397,398
 import torch
 import h5py
 import numpy as np
